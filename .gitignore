@@ -5,6 +5,15 @@
 *.so
 *.dylib
 
+
+.gocache/
+coverage.txt
+charts/brigade-cron-gateway/charts
+.DS_Store
+.brigade/node_modules/
+.brigade/secrets.yaml
+
+
 # Test binary, built with `go test -c`
 *.test
 
@@ -13,3 +22,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# IDEs
+.vscode/
+.devcontainer/
+.idea/
+.swp
+
