@@ -1,0 +1,45 @@
+{{- range .Values.cronEvents }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "brigade-cron-gateway.fullname" . }}
+  labels:
+    {{- include "brigade-cron-gateway.labels" . | nindent 4 }}
+spec:
+  schedule: "{{ default "@hourly" .schedule }}"
+  successfulJobsHistoryLimit: {{ default 10 .Values.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 10 .Values.failedJobsHistoryLimit }}
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "brigade-cron-gateway.selectorLabels" . | nindent 12 }}
+        spec:
+          serviceAccountName: {{ include "brigade-cron-gateway.serviceAccountName" . }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          containers:
+          - name: {{ .Chart.Name }}-{{ .nameSuffix }}
+            securityContext:
+              {{- toYaml .Values.securityContext | nindent 14 }}
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+            imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
+            env:
+            - name: BRIGADE_SOURCE
+              value: {{ .source }}
+            - name: BRIGADE_TYPE
+              value: {{ .type }}
+            - name: BRIGADE_PAYLOAD
+              value: {{ .payload | quote }}
+            - name: API_ADDRESS
+              value: {{ .Values.brigadeApi.address }}
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: apitoken
+                  name: {{ .Values.brigadeApi.tokenSecretName }}     
+            - name: API_IGNORE_CERT_WARNINGS
+              value: {{ .Values.brigadeApi.ignoreCertWarnings }}
+{{- end }}

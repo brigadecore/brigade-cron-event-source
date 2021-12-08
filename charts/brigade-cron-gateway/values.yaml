@@ -1,14 +1,44 @@
-# Default values for brigade-cron-gateway.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+#
+# cron events to be created
+#
 
-replicaCount: 1
+# https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#schedule
+# schedule: "*/5 * * * *" # Every 5 minutes
+# schedule: "*/1 * * * *" # Every 1 minutes
+# schedule: "@hourly"
+# schedule: "@daily"
+# schedule: "@weekly"
+# schedule: "@monthly"
+# schedule: "@yearly"
+cronEvents:
+  - nameSuffix: "job001" #maximum 5 chars
+    source: "cronproject"
+    type: "cron"
+    schedule: "*/5 * * * *"
+    payload: {}
+  - nameSuffix: "job002" #maximum 5 chars
+    source: "cronproject"
+    type: "cron"
+    schedule: "*/1 * * * *"
+    payload: {}
+
+# successfulJobsHistoryLimit: 10
+# failedJobsHistoryLimit: 10
+
+#
+# brigade-cron-gateways values
+#
+
+brigadeApi:
+  address: "https://brigade-apiserver.brigade.svc.cluster.local"
+  ignoreCertWarnings: true
+  tokenSecretName: "brigade-api-server-token"
 
 image:
-  repository: nginx
-  pullPolicy: IfNotPresent
+  repository: brigade-cron-gateway
+  pullPolicy: Always #IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "edge"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -36,26 +66,6 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-service:
-  type: ClusterIP
-  port: 80
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -67,13 +77,6 @@ resources: {}
   # requests:
   #   cpu: 100m
   #   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 

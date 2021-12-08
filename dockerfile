@@ -8,6 +8,7 @@ ENV CGO_ENABLED=0
 
 WORKDIR /src
 COPY main.go main.go
+COPY config.go config.go
 COPY go.mod go.mod
 COPY go.sum go.sum
 
