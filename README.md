@@ -20,6 +20,8 @@ brig role grant EVENT_CREATOR --service-account cron --source cronproject
 ### Build Docker Image locally
 make hack-build
 
+initial test image published here: jorgearteiro/brigade-cron-gateway:edge it creates event with Source: "cronsource", Type: "cron"
+
 ### Create Secret with API Server Token
 kubectl create secret generic brigade-api-server-token --namespace default\
 --from-literal=apitoken=e01f2b82a1d042889396889ad741e9f2E.......
