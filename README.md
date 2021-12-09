@@ -6,12 +6,25 @@
 ### Pre-requisites (Following https://quickstart.brigade.sh)
 Docker Desktop Installed
 
-Kind Installed with Cluster created
+Helm 3.7+ installed
 
-Brigade V2 intalled
+Kind Installed
 
+Brig CLI installed 
 
-### Create brigade Service Account
+Brigade V2 intalled on Kubernetes Kind Cluster using Helm Chart
+
+### Create Kind cluster called brigade
+kind create cluster --name brigade
+### Open port-forward with api server pod running on the kind cluster
+kubectl --namespace brigade port-forward service/brigade-apiserver 8443:443 &>/dev/null &
+
+### Login to Brigade API Server from brig CLI (ps: Using Root password is not recommended for Prodcution)
+export APISERVER_ROOT_PASSWORD=$(kubectl get secret --namespace brigade brigade-apiserver --output jsonpath='{.data.root-user-password}' | base64 --decode)
+
+brig login --insecure --server https://localhost:8443 --root --password "${APISERVER_ROOT_PASSWORD}"
+
+### Create brigade Service Account (make sure you keep generated api token in a safe place)
 brig service-account create --id cron --description cron
 
 ### Give permission to Service Account to create events
@@ -27,7 +40,7 @@ kubectl create secret generic brigade-api-server-token --namespace default\
 --from-literal=apitoken=e01f2b82a1d042889396889ad741e9f2E.......
 
 ### Load Docker image built on kind cluster
-kind load docker-image brigade-cron-gateway:edge --name <Name of your Kind Cluster>
+kind load docker-image brigade-cron-gateway:edge --name brigade
 
 ### Testing on Local Kind cluster
 kubectl run crongateway --image=brigade-cron-gateway:edge --restart=Never \
