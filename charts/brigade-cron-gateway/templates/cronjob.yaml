@@ -1,45 +1,72 @@
-{{- range .Values.cronEvents }}
+{{ $fullname := include "brigade-cron-gateway.fullname" . }}
+{{ $labels := include "brigade-cron-gateway.labels" . }}
+{{ $selectorLabels := include "brigade-cron-gateway.selectorLabels" . }}
+{{ $serviceAccountName := include "brigade-cron-gateway.serviceAccountName" . }}
+{{- range $.Values.cronEvents }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "brigade-cron-gateway.fullname" . }}
+  name: {{ $fullname }}-{{ .nameSuffix }}
   labels:
-    {{- include "brigade-cron-gateway.labels" . | nindent 4 }}
+    cronjob: {{ $fullname }}-{{ .nameSuffix }}
+    {{- $labels | nindent 4 }}
 spec:
   schedule: "{{ default "@hourly" .schedule }}"
-  successfulJobsHistoryLimit: {{ default 10 .Values.successfulJobsHistoryLimit }}
-  failedJobsHistoryLimit: {{ default 10 .Values.failedJobsHistoryLimit }}
+  successfulJobsHistoryLimit: {{ default 10 $.Values.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 10 $.Values.failedJobsHistoryLimit }}
   concurrencyPolicy: "Forbid"
   jobTemplate:
     spec:
       template:
         metadata:
+          name: {{ $fullname }}-{{ .nameSuffix }}
+          {{- with $.Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}        
           labels:
-            {{- include "brigade-cron-gateway.selectorLabels" . | nindent 12 }}
+            cronjob: {{ $fullname }}-{{ .nameSuffix }}
+            {{- $selectorLabels | nindent 12 }}
         spec:
-          serviceAccountName: {{ include "brigade-cron-gateway.serviceAccountName" . }}
+          serviceAccountName: {{ $serviceAccountName }}
           securityContext:
-            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+            {{- toYaml $.Values.podSecurityContext | nindent 12 }}
+          restartPolicy: OnFailure
           containers:
-          - name: {{ .Chart.Name }}-{{ .nameSuffix }}
+          - name: {{ $.Chart.Name }}-job
             securityContext:
-              {{- toYaml .Values.securityContext | nindent 14 }}
-            image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-            imagePullPolicy: {{ default "IfNotPresent" .Values.image.pullPolicy }}
+              {{- toYaml $.Values.securityContext | nindent 14 }}
+            image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
+            imagePullPolicy: {{ default "IfNotPresent" $.Values.image.pullPolicy }}
+            {{- with $.Values.resources }}             
+            resources: 
+              {{- toYaml . | nindent 14 }}
+            {{- end }}  
             env:
             - name: BRIGADE_SOURCE
-              value: {{ .source }}
+              value: "{{ .source }}"
             - name: BRIGADE_TYPE
-              value: {{ .type }}
-            - name: BRIGADE_PAYLOAD
-              value: {{ .payload | quote }}
+              value: "{{ .type }}"
             - name: API_ADDRESS
-              value: {{ .Values.brigadeApi.address }}
+              value: "{{ $.Values.brigadeApi.address }}"
             - name: API_TOKEN
               valueFrom:
                 secretKeyRef:
                   key: apitoken
-                  name: {{ .Values.brigadeApi.tokenSecretName }}     
+                  name: {{ $.Values.brigadeApi.tokenSecretName }}     
             - name: API_IGNORE_CERT_WARNINGS
-              value: {{ .Values.brigadeApi.ignoreCertWarnings }}
+              value: "{{ $.Values.brigadeApi.ignoreCertWarnings }}"  
+          {{- with $.Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with $.Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with $.Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+---          
 {{- end }}
