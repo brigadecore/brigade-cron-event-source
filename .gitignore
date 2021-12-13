@@ -5,11 +5,30 @@
 *.so
 *.dylib
 
+
+.gocache/
+coverage.txt
+charts/brigade-cron-gateway/charts
+.DS_Store
+.brigade/node_modules/
+.brigade/secrets.yaml
+
+
 # Test binary, built with `go test -c`
 *.test
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# Go debug environment variables
+.env
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# IDEs
+.vscode/
+.devcontainer/
+.idea/
+.swp
+

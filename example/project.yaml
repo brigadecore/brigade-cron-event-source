@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://schemas.brigade.sh/schemas-v2/project.json
+apiVersion: brigade.sh/v2
+kind: Project
+metadata:
+  id: cronproject
+description: My cron test project
+spec:
+  ## Subscribe below to any events that should trigger your script.
+  ## The example depicts a subscription to "cron" events 
+  ## originating from the Cron Gateway. 
+  eventSubscriptions:
+  - source: cronsource
+    types:
+    - cron
+  workerTemplate:
+    logLevel: DEBUG
+    defaultConfigFiles:
+      brigade.ts: |
+        import { events, Job } from "@brigadecore/brigadier"
+        
+        // Use events.on() to define how your script responds to different events. 
+        // The example below depicts handling of "cron" events originating from
+        // the Cron Gateway.
+        
+        events.on("cronsource", "cron", async event => {
+        	let job = new Job("hello", "debian:latest", event)
+         	job.primaryContainer.command = ["echo"]
+         	job.primaryContainer.arguments = ["Hello, World!"]
+         	await job.run()
+        })
+        
+        events.process()
+        

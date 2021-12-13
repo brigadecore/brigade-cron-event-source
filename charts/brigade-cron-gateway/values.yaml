@@ -1,0 +1,90 @@
+#
+# cron events to be created
+#
+# https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#schedule
+# schedule: "*/5 * * * *" # Every 5 minutes
+# schedule: "*/1 * * * *" # Every 1 minutes
+# schedule: "@hourly"
+# schedule: "@daily"
+# schedule: "@weekly"
+# schedule: "@monthly"
+# schedule: "@yearly"
+cronEvents:
+  - nameSuffix: "job01" #maximum 5 chars
+    source: "cronsource"
+    type: "cron"
+    schedule: "*/1 * * * *"
+    qualifiers: 
+      customer: "cron gateway"
+    labels: 
+      costCenter: "finance"
+    payload: 
+      data: "test cron gateway"
+  - nameSuffix: "job02" #maximum 5 chars
+    source: "cronsource"
+    type: "cron"
+    schedule: "*/5 * * * *"
+    qualifiers: {}
+    labels: {}
+    payload: {}    
+
+#
+# brigade-cron-gateways values
+#
+brigadeApi:
+  address: "https://brigade-apiserver.brigade.svc.cluster.local"
+  ignoreCertWarnings: "true"
+  tokenSecretName: "brigade-api-server-token"
+
+image:
+  repository: "jorgearteiro/brigade-cron-gateway"
+  pullPolicy:  "IfNotPresent" #"Always"
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "0.1.0"
+
+successfulJobsHistoryLimit: 10
+failedJobsHistoryLimit: 10
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: 
+  fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+resources: 
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

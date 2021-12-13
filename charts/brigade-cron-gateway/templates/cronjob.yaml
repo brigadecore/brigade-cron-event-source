@@ -1,0 +1,93 @@
+{{ $fullname := include "brigade-cron-gateway.fullname" . }}
+{{ $labels := include "brigade-cron-gateway.labels" . }}
+{{ $selectorLabels := include "brigade-cron-gateway.selectorLabels" . }}
+{{ $serviceAccountName := include "brigade-cron-gateway.serviceAccountName" . }}
+{{- range $.Values.cronEvents }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ $fullname }}-{{ .nameSuffix }}
+  labels:
+    cronjob: {{ $fullname }}-{{ .nameSuffix }}
+    {{- $labels | nindent 4 }}
+spec:
+  schedule: "{{ default "@hourly" .schedule }}"
+  successfulJobsHistoryLimit: {{ default 10 $.Values.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 10 $.Values.failedJobsHistoryLimit }}
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: {{ $fullname }}-{{ .nameSuffix }}
+          {{- with $.Values.podAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}        
+          labels:
+            cronjob: {{ $fullname }}-{{ .nameSuffix }}
+            {{- $selectorLabels | nindent 12 }}
+        spec:
+          serviceAccountName: {{ $serviceAccountName }}
+          securityContext:
+            {{- toYaml $.Values.podSecurityContext | nindent 12 }}
+          restartPolicy: OnFailure
+          containers:
+          - name: {{ $.Chart.Name }}-job
+            securityContext:
+              {{- toYaml $.Values.securityContext | nindent 14 }}
+            image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
+            imagePullPolicy: {{ default "IfNotPresent" $.Values.image.pullPolicy }}
+            {{- with $.Values.resources }}             
+            resources: 
+              {{- toYaml . | nindent 14 }}
+            {{- end }}  
+            env:
+            - name: BRIGADE_SOURCE
+              value: "{{ .source }}"
+            - name: BRIGADE_TYPE
+              value: "{{ .type }}"
+            - name: API_ADDRESS
+              value: "{{ $.Values.brigadeApi.address }}"
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  key: apitoken
+                  name: {{ $.Values.brigadeApi.tokenSecretName }}     
+            - name: API_IGNORE_CERT_WARNINGS
+              value: "{{ $.Values.brigadeApi.ignoreCertWarnings }}"  
+            volumeMounts:
+            - name: cronjob-config
+              mountPath: "/cronjob-config"
+              readOnly: true  
+          {{- with $.Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with $.Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          {{- with $.Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+          volumes:
+            - name: cronjob-config
+              configMap:
+                name: {{ $fullname }}-{{ .nameSuffix }}
+                items:
+                {{- with .qualifiers }}                
+                - key: "qualifiers"
+                  path: "qualifiers"
+                {{- end }}
+                {{- with .labels }}                
+                - key: "labels"  
+                  path: "labels"
+                {{- end }}
+                {{- with .payload }}                
+                - key: "payload"  
+                  path: "payload"
+                {{- end }}
+--- 
+{{- end }}
