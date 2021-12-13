@@ -11,15 +11,22 @@
 # schedule: "@yearly"
 cronEvents:
   - nameSuffix: "job01" #maximum 5 chars
-    source: "cronproject"
-    type: "cron"
-    schedule: "*/5 * * * *"
-    payload: {}
-  - nameSuffix: "job02" #maximum 5 chars
-    source: "cronproject"
+    source: "cronsource"
     type: "cron"
     schedule: "*/1 * * * *"
-    payload: {}
+    qualifiers: 
+      customer: "cron gateway"
+    labels: 
+      costCenter: "finance"
+    payload: 
+      data: "test cron gateway"
+  - nameSuffix: "job02" #maximum 5 chars
+    source: "cronsource"
+    type: "cron"
+    schedule: "*/5 * * * *"
+    qualifiers: {}
+    labels: {}
+    payload: {}    
 
 #
 # brigade-cron-gateways values
@@ -31,9 +38,9 @@ brigadeApi:
 
 image:
   repository: "jorgearteiro/brigade-cron-gateway"
-  pullPolicy: "Always" #IfNotPresent
+  pullPolicy:  "IfNotPresent" #"Always"
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "edge"
+  tag: "0.1.0"
 
 successfulJobsHistoryLimit: 10
 failedJobsHistoryLimit: 10

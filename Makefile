@@ -167,6 +167,15 @@ hack-build:
 		--build-arg COMMIT='$(GIT_VERSION)' \
 		.
 
+hack-build-no-cache:
+	docker build \
+		-t $(DOCKER_IMAGE_NAME):$(IMMUTABLE_DOCKER_TAG) \
+		-t $(DOCKER_IMAGE_NAME):$(MUTABLE_DOCKER_TAG) \
+		--build-arg VERSION='$(VERSION)' \
+		--build-arg COMMIT='$(GIT_VERSION)' \
+		--no-cache \
+		.
+
 .PHONY: hack-push
 hack-push: hack-build
 	docker push $(DOCKER_IMAGE_NAME):$(IMMUTABLE_DOCKER_TAG)
@@ -197,5 +206,5 @@ hack: hack-push hack-deploy
 .PHONY: hack-load-image
 hack-load-image:
 	@echo "Loading $(DOCKER_IMAGE_NAME):$(IMMUTABLE_DOCKER_TAG)"
-	@kind load docker-image $(DOCKER_IMAGE_NAME):$(IMMUTABLE_DOCKER_TAG) \
+	@kind load docker-image $(DOCKER_IMAGE_NAME):$(IMMUTABLE_DOCKER_TAG) --name brigade\
 			|| echo >&2 "kind not installed or error loading image: $(DOCKER_IMAGE_NAME):$(IMMUTABLE_DOCKER_TAG)"

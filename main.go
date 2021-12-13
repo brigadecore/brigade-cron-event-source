@@ -18,19 +18,31 @@ func main() {
 
 	client := core.NewEventsClient(address, token, &opts)
 
-	brigadeEvent := core.Event{
-		Source: "cronsource",
-		Type:   "cron",
-		// Qualifiers: map[string]string{
-		// 	"source": "cronsource",
-		// 	"type":   "cron",
-		// },
-		Payload: string("test"),
+	brigadeSource, brigadeType, _ := eventConfig()
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	test, err := client.Create(ctx, brigadeEvent)
+	qualifiers, _ := qualifiersConfig()
 
-	log.Println(
-		test, err,
-	)
+	labels, _ := labelsConfig()
+
+	payload, _ := payloadConfig()
+
+	brigadeEvent := core.Event{
+		Source:     brigadeSource,
+		Type:       brigadeType,
+		Qualifiers: qualifiers,
+		Labels:     labels,
+		Payload:    payload,
+	}
+
+	eventList, err := client.Create(ctx, brigadeEvent)
+
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		log.Println(eventList)
+	}
+
 }

@@ -56,6 +56,10 @@ spec:
                   name: {{ $.Values.brigadeApi.tokenSecretName }}     
             - name: API_IGNORE_CERT_WARNINGS
               value: "{{ $.Values.brigadeApi.ignoreCertWarnings }}"  
+            volumeMounts:
+            - name: cronjob-config
+              mountPath: "/cronjob-config"
+              readOnly: true  
           {{- with $.Values.nodeSelector }}
           nodeSelector:
             {{- toYaml . | nindent 8 }}
@@ -68,5 +72,22 @@ spec:
           tolerations:
             {{- toYaml . | nindent 8 }}
           {{- end }}
----          
+          volumes:
+            - name: cronjob-config
+              configMap:
+                name: {{ $fullname }}-{{ .nameSuffix }}
+                items:
+                {{- with .qualifiers }}                
+                - key: "qualifiers"
+                  path: "qualifiers"
+                {{- end }}
+                {{- with .labels }}                
+                - key: "labels"  
+                  path: "labels"
+                {{- end }}
+                {{- with .payload }}                
+                - key: "payload"  
+                  path: "payload"
+                {{- end }}
+--- 
 {{- end }}
