@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://schemas.brigade.sh/schemas-v2/project.json
+apiVersion: brigade.sh/v2
+kind: Project
+metadata:
+  id: brigade-cron-gateway
+description: Brigade Cron Gateway built with Brigade 2!
+spec:
+  eventSubscriptions:
+  - source: brigade.sh/github
+    qualifiers:
+      repo: brigadecore/brigade-cron-gateway
+    types:
+    - check_run:rerequested
+    - check_suite:requested
+    - check_suite:rerequested
+    - release:published
+  workerTemplate:
+    git:
+      cloneURL: https://github.com/brigadecore/brigade-cron-gateway.git
+    jobPolicies:
+      allowPrivileged: true
