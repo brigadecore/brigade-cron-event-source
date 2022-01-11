@@ -1,9 +1,12 @@
+# Brigade Cron Gateway
+
 <img width="100" align="left" src="logo.png">
 
-# Brigade-cron-gateway
- This Brigade V2 Cron Gateway creates one kubernetes cron job for each "cronEvents:" parameter list on the gateway Helm installation chart values file. 
- Each cron job will trigger an brigade v2 event, based on cronjob schedule, Source, Type, Qualifiers, Labels and Payload provided on the values file.
+This Brigade V2 Cron Gateway creates one Kubernetes cron job for each "cronEvents:" parameter list on the gateway Helm installation chart values file. 
 
+Each cron job will trigger a Brigade v2 event, based on cronjob schedule, Source, Type, Qualifiers, Labels and Payload provided on the values file.
+
+<br clear="left"/>
 
 ## Pre-requisites (Following https://quickstart.brigade.sh)
 Helm 3.7+ installed (Installation and Development)
