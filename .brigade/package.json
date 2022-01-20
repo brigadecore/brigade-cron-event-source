@@ -1,0 +1,6 @@
+{
+  "name": "brigade-cron-gateway-ci-cd",
+  "dependencies": {
+    "@brigadecore/brigadier": "^2.2.0"
+  }
+}
