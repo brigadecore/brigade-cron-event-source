@@ -1,5 +1,10 @@
 # Brigade Cron Event Source
 
+![build](https://badgr.brigade2.io/v1/github/checks/brigadecore/brigade-cron-event-source/badge.svg?appID=99005)
+[![codecov](https://codecov.io/gh/brigadecore/brigade-github-gateway/branch/main/graph/badge.svg?token=ZPY3OF13FC)](https://codecov.io/gh/brigadecore/brigade-github-gateway)
+[![Go Report Card](https://goreportcard.com/badge/github.com/brigadecore/brigade-cron-event-source)](https://goreportcard.com/report/github.com/brigadecore/brigade-cron-event-source)
+[![slack](https://img.shields.io/badge/slack-brigade-brightgreen.svg?logo=slack)](https://kubernetes.slack.com/messages/C87MF1RFD)
+
 <img width="100" align="left" src="logo.png">
 
 This Brigade V2 Cron Event Source creates one Kubernetes cron job for each "cronEvents:" parameter list on the Event Source Helm installation chart values file. 
