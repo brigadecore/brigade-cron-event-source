@@ -1,8 +1,8 @@
-# Brigade Cron Gateway
+# Brigade Cron Event Source
 
 <img width="100" align="left" src="logo.png">
 
-This Brigade V2 Cron Gateway creates one Kubernetes cron job for each "cronEvents:" parameter list on the gateway Helm installation chart values file. 
+This Brigade V2 Cron Event Source creates one Kubernetes cron job for each "cronEvents:" parameter list on the Event Source Helm installation chart values file. 
 
 Each cron job will trigger a Brigade v2 event, based on cronjob schedule, Source, Type, Qualifiers, Labels and Payload provided on the values file.
 
@@ -31,17 +31,17 @@ brig role grant EVENT_CREATOR --service-account cron --source cronproject
 ```
 ### Create Secret with API Server Token
 ```console
-kubectl create secret generic brigade-api-server-token --namespace crongateway\
+kubectl create secret generic brigade-api-server-token --namespace cron-event-source\
 --from-literal=apitoken=e01f2b82a1d042889396889ad741e9f2E.......
 ```
 ### Helm Install
 ```Console
-helm install crongateway --version 0.1.0 --create-namespace --namespace crongateway --wait --timeout 300 \
-./charts/brigade-cron-gateway/ -f ./charts/brigade-cron-gateway/values.yaml 
+helm install cron-event-source --version 0.1.0 --create-namespace --namespace cron-event-source --wait --timeout 300 \
+./charts/brigade-cron-event-source/ -f ./charts/brigade-cron-event-source/values.yaml 
 ```
 ### Helm Uninstall
 ```console
-helm uninstall crongateway
+helm uninstall cron-event-source
 ````
 
 ## Development Instructions
@@ -68,10 +68,10 @@ make hack-build-no-cache
 make hack-load-image
 ```
 
-Image published on docker hub: jorgearteiro/brigade-cron-gateway:0.1.0
+Image published on docker hub: jorgearteiro/brigade-cron-event-source:0.1.0
 ### Testing on Local Kind cluster
 ```console
-kubectl run crongateway --image=brigade-cron-gateway:edge --restart=Never --namespace crongateway \
+kubectl run cron-event-source --image=brigade-cron-event-source:edge --restart=Never --namespace cron-event-source \
 --env API_ADDRESS="https://brigade-apiserver.brigade.svc.cluster.local" \
 --env API_TOKEN="[<Enter you API token here>]" \
 --env API_IGNORE_CERT_WARNINGS=true \

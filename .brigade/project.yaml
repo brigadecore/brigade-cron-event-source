@@ -2,13 +2,13 @@
 apiVersion: brigade.sh/v2
 kind: Project
 metadata:
-  id: brigade-cron-gateway
-description: Brigade Cron Gateway built with Brigade 2!
+  id: brigade-cron-event-source
+description: Brigade Cron Event Source built with Brigade 2!
 spec:
   eventSubscriptions:
   - source: brigade.sh/github
     qualifiers:
-      repo: brigadecore/brigade-cron-gateway
+      repo: brigadecore/brigade-cron-event-source
     types:
     - check_run:rerequested
     - check_suite:requested
@@ -16,6 +16,6 @@ spec:
     - release:published
   workerTemplate:
     git:
-      cloneURL: https://github.com/brigadecore/brigade-cron-gateway.git
+      cloneURL: https://github.com/brigadecore/brigade-cron-event-source.git
     jobPolicies:
       allowPrivileged: true

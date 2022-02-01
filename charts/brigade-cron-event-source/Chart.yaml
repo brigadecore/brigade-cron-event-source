@@ -1,6 +1,6 @@
 apiVersion: v2
-name: brigade-cron-gateway
-description: A Helm Chart to deploy multiple Brigade Cron Gateway as Kubernetes CronJobs
+name: brigade-cron-event-source
+description: A Helm Chart to deploy multiple Brigade Cron Event Source as Kubernetes CronJobs
 
 # A chart can be either an 'application' or a 'library' chart.
 #

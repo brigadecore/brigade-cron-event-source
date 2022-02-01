@@ -1,5 +1,5 @@
-{{ $fullname := include "brigade-cron-gateway.fullname" . }}
-{{ $labels := include "brigade-cron-gateway.labels" . }}
+{{ $fullname := include "brigade-cron-event-source.fullname" . }}
+{{ $labels := include "brigade-cron-event-source.labels" . }}
 {{- range $.Values.cronEvents }}
 kind: ConfigMap
 apiVersion: v1

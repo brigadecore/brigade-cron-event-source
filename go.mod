@@ -1,4 +1,4 @@
-module github.com/brigadecore/brigade-cron-gateway
+module github.com/brigadecore/brigade-cron-event-source
 
 go 1.17
 

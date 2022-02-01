@@ -1,5 +1,5 @@
 #
-# cron events to be created
+# cron event sources to be created
 #
 # https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#schedule
 # schedule: "*/5 * * * *" # Every 5 minutes
@@ -15,11 +15,11 @@ cronEvents:
     type: "cron"
     schedule: "*/1 * * * *"
     qualifiers: 
-      customer: "cron gateway"
+      customer: "cron event"
     labels: 
       costCenter: "finance"
     payload: 
-      data: "test cron gateway"
+      data: "test cron event source"
   - nameSuffix: "job02" #maximum 5 chars
     source: "cronsource"
     type: "cron"
@@ -29,7 +29,7 @@ cronEvents:
     payload: {}    
 
 #
-# brigade-cron-gateways values
+# brigade-cron-event-sources values
 #
 brigadeApi:
   address: "https://brigade-apiserver.brigade.svc.cluster.local"
@@ -37,7 +37,7 @@ brigadeApi:
   tokenSecretName: "brigade-api-server-token"
 
 image:
-  repository: "jorgearteiro/brigade-cron-gateway"
+  repository: "jorgearteiro/brigade-cron-eventsource"
   pullPolicy:  "IfNotPresent" #"Always"
   # Overrides the image tag whose default is the chart appVersion.
   tag: "0.1.0"

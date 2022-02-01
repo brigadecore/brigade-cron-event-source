@@ -13,10 +13,10 @@ COPY go.mod go.mod
 COPY go.sum go.sum
 
 RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
-  -o bin/cron-gateway \
+  -o bin/cron-event-source \
   -ldflags "-w -X github.com/brigadecore/brigade-foundations/version.version=$VERSION -X github.com/brigadecore/brigade-foundations/version.commit=$COMMIT" \
   .
 
 FROM scratch
-COPY --from=builder /src/bin/ /brigade-cron-gateway/bin/
-ENTRYPOINT ["/brigade-cron-gateway/bin/cron-gateway"]
+COPY --from=builder /src/bin/ /brigade-cron-event-source/bin/
+ENTRYPOINT ["/brigade-cron-event-source/bin/cron-event-source"]
