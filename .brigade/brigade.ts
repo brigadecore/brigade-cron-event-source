@@ -4,7 +4,7 @@ const goImg = "brigadecore/go-tools:v0.5.0"
 const dindImg = "docker:20.10.9-dind"
 const dockerClientImg = "brigadecore/docker-tools:v0.1.0"
 const helmImg = "brigadecore/helm-tools:v0.4.0"
-const localPath = "/workspaces/brigade-cron-gateway"
+const localPath = "/workspaces/brigade-cron-event-source"
 
 // MakeTargetJob is just a job wrapper around one or more make targets.
 class MakeTargetJob extends Job {

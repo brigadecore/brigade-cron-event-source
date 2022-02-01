@@ -1,5 +1,5 @@
 {
-  "name": "brigade-cron-gateway-ci-cd",
+  "name": "brigade-cron-event-source-ci-cd",
   "dependencies": {
     "@brigadecore/brigadier": "^2.2.0"
   }

@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "brigade-cron-gateway.name" -}}
+{{- define "brigade-cron-event-source.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 58 | trimSuffix "-" }}
 {{- end }}
 
@@ -10,7 +10,7 @@ Create a default fully qualified app name.
 We truncate at 58 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "brigade-cron-gateway.fullname" -}}
+{{- define "brigade-cron-event-source.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 58 | trimSuffix "-" }}
 {{- else }}
@@ -26,7 +26,7 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "brigade-cron-gateway.chart" -}}
+{{- define "brigade-cron-event-source.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 58 | trimSuffix "-" }}
 {{- end }}
 

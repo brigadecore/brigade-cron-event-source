@@ -23,9 +23,9 @@ ifneq ($(SKIP_DOCKER),true)
 		--rm \
 		-e SKIP_DOCKER=true \
 		-e GITHUB_TOKEN=$${GITHUB_TOKEN} \
-		-e GOCACHE=/workspaces/brigade-cron-gateway/.gocache \
-		-v $(PROJECT_ROOT):/workspaces/brigade-cron-gateway \
-		-w /workspaces/brigade-cron-gateway \
+		-e GOCACHE=/workspaces/brigade-cron-event-source/.gocache \
+		-v $(PROJECT_ROOT):/workspaces/brigade-cron-event-source \
+		-w /workspaces/brigade-cron-event-source \
 		$(GO_DEV_IMAGE)
 
 	HELM_IMAGE := brigadecore/helm-tools:v0.4.0
@@ -35,8 +35,8 @@ ifneq ($(SKIP_DOCKER),true)
 		--rm \
 		-e SKIP_DOCKER=true \
 		-e HELM_PASSWORD=$${HELM_PASSWORD} \
-		-v $(PROJECT_ROOT):/workspaces/brigade-cron-gateway \
-		-w /workspaces/brigade-cron-gateway \
+		-v $(PROJECT_ROOT):/workspaces/brigade-cron-event-source \
+		-w /workspaces/brigade-cron-event-source \
 		$(HELM_IMAGE)
 endif
 
@@ -52,7 +52,7 @@ ifdef DOCKER_ORG
 	DOCKER_ORG := $(DOCKER_ORG)/
 endif
 
-DOCKER_IMAGE_NAME := $(DOCKER_REGISTRY)$(DOCKER_ORG)brigade-cron-gateway
+DOCKER_IMAGE_NAME := $(DOCKER_REGISTRY)$(DOCKER_ORG)brigade-cron-event-source
 
 ifdef HELM_REGISTRY
 	HELM_REGISTRY := $(HELM_REGISTRY)/
@@ -62,7 +62,7 @@ ifdef HELM_ORG
 	HELM_ORG := $(HELM_ORG)/
 endif
 
-HELM_CHART_NAME := $(HELM_REGISTRY)$(HELM_ORG)brigade-cron-gateway
+HELM_CHART_NAME := $(HELM_REGISTRY)$(HELM_ORG)brigade-cron-event-source
 
 ifdef VERSION
 	MUTABLE_DOCKER_TAG := latest
@@ -98,7 +98,7 @@ test-unit:
 .PHONY: lint-chart
 lint-chart:
 	$(HELM_DOCKER_CMD) sh -c ' \
-		cd charts/brigade-cron-gateway && \
+		cd charts/brigade-cron-event-source && \
 		helm dep up && \
 		helm lint . \
 	'
@@ -148,14 +148,14 @@ push:
 publish-chart:
 	$(HELM_DOCKER_CMD) sh	-c ' \
 		helm registry login $(HELM_REGISTRY) -u $(HELM_USERNAME) -p $${HELM_PASSWORD} && \
-		cd charts/brigade-cron-gateway && \
+		cd charts/brigade-cron-event-source && \
 		helm dep up && \
 		helm package . --version $(VERSION) --app-version $(VERSION) && \
-		helm push brigade-cron-gateway-$(VERSION).tgz oci://$(HELM_REGISTRY)$(HELM_ORG) \
+		helm push brigade-cron-event-source-$(VERSION).tgz oci://$(HELM_REGISTRY)$(HELM_ORG) \
 	'
 
 ################################################################################
-# Targets to facilitate hacking on Brigade cron Gateway.                        #
+# Targets to facilitate hacking on Brigade cron Event Source.                  #
 ################################################################################
 
 .PHONY: hack-build
@@ -188,11 +188,11 @@ hack-deploy:
 ifndef BRIGADE_API_TOKEN
 	@echo "BRIGADE_API_TOKEN must be defined" && false
 endif
-	helm dep up charts/brigade-cron-gateway && \
-	helm upgrade brigade-cron-gateway charts/brigade-cron-gateway \
+	helm dep up charts/brigade-cron-event-source && \
+	helm upgrade brigade-cron-event-source charts/brigade-cron-event-source \
 		--install \
 		--create-namespace \
-		--namespace brigade-cron-gateway \
+		--namespace brigade-cron-event-source \
 		--timeout 60s \
 		--set image.repository=$(DOCKER_IMAGE_NAME) \
 		--set image.tag=$(IMMUTABLE_DOCKER_TAG) \

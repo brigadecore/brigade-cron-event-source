@@ -7,7 +7,7 @@ description: My cron test project
 spec:
   ## Subscribe below to any events that should trigger your script.
   ## The example depicts a subscription to "cron" events 
-  ## originating from the Cron Gateway. 
+  ## originating from the Cron Event Source. 
   eventSubscriptions:
   - source: cronsource
     types:
@@ -20,7 +20,7 @@ spec:
         
         // Use events.on() to define how your script responds to different events. 
         // The example below depicts handling of "cron" events originating from
-        // the Cron Gateway.
+        // the Cron Event Source.
         
         events.on("cronsource", "cron", async event => {
         	let job = new Job("hello", "debian:latest", event)
