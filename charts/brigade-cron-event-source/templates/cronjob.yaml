@@ -1,5 +1,5 @@
-{{ $fullname := include "brigade-cron-event-source.fullname" . }}
-{{ $labels := include "brigade-cron-event-source.labels" . }}
+{{ $fullname := include "event-source.fullname" . }}
+{{ $labels := include "event-source.labels" . }}
 {{- range $.Values.cronEvents }}
 apiVersion: batch/v1
 kind: CronJob
