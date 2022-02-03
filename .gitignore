@@ -8,7 +8,7 @@
 
 .gocache/
 coverage.txt
-charts/brigade-cron-gateway/charts
+charts/brigade-cron-event-source/charts
 .DS_Store
 .brigade/node_modules/
 .brigade/secrets.yaml
