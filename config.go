@@ -1,12 +1,12 @@
 package main
 
-// nolint: lll
 import (
-	"encoding/json"
 	"io/ioutil"
 
 	"github.com/brigadecore/brigade-foundations/os"
+	"github.com/brigadecore/brigade/sdk/v2/core"
 	"github.com/brigadecore/brigade/sdk/v2/restmachinery"
+	"github.com/ghodss/yaml"
 )
 
 // apiClientConfig populates the Brigade SDK's APIClientOptions from
@@ -26,48 +26,12 @@ func apiClientConfig() (string, string, restmachinery.APIClientOptions, error) {
 	return address, token, opts, err
 }
 
-func eventConfig() (string, string, error) {
-	brigadeSource, err := os.GetRequiredEnvVar("BRIGADE_SOURCE")
+func event() (core.Event, error) {
+	event := core.Event{}
+	eventBytes, err := ioutil.ReadFile("/app/config/event.yaml")
 	if err != nil {
-		return brigadeSource, "", err
+		return event, err
 	}
-	brigadeType, err := os.GetRequiredEnvVar("BRIGADE_TYPE")
-	if err != nil {
-		return brigadeSource, brigadeType, err
-	}
-	return brigadeSource, brigadeType, err
-}
-
-func qualifiersConfig() (map[string]string, error) {
-	qualifiersBytes, err := ioutil.ReadFile("/cronjob-config/qualifiers")
-	if err != nil {
-		return map[string]string{}, err
-	}
-	qualifiersPlainText := map[string]string{}
-	if err :=
-		json.Unmarshal(qualifiersBytes, &qualifiersPlainText); err != nil {
-		return map[string]string{}, err
-	}
-	return qualifiersPlainText, nil
-}
-
-func labelsConfig() (map[string]string, error) {
-	labelsBytes, err := ioutil.ReadFile("/cronjob-config/labels")
-	if err != nil {
-		return map[string]string{}, err
-	}
-	labelsPlainText := map[string]string{}
-	if err :=
-		json.Unmarshal(labelsBytes, &labelsPlainText); err != nil {
-		return map[string]string{}, err
-	}
-	return labelsPlainText, nil
-}
-
-func payloadConfig() (string, error) {
-	payloadBytes, err := ioutil.ReadFile("/cronjob-config/payload")
-	if err != nil {
-		return "", err
-	}
-	return string(payloadBytes), nil
+	err = yaml.Unmarshal(eventBytes, &event)
+	return event, err
 }
