@@ -13,6 +13,24 @@ Each cron job will trigger a Brigade v2 event, based on cronjob schedule, Source
 
 <br clear="left"/>
 
+## Why a Cron Event Source?
+
+Before getting started with this event source, do ask yourself if you truly need
+it. If your only interest is in executing a _simple_ task on a particular
+schedule, Kubernetes, by itself, gives you everything you need. In such a case,
+we don't recommend over-complicating things by involving Brigade!
+
+If, however, you wish to execute a more complex workflow on a particular
+schedule or if your use case is well-served by other Brigade features, _do_
+consider utilizing this event source.
+
+A non-exhaustive set of reasons you might wish to use this gateway includes:
+
+* Your workflow is complex and involves multiple containers that need to execute
+  concurrently or in serial.
+* You also have _other_ events you need to handle.
+* You care about capturing and saving logs from your automated task.
+
 ## Pre-requisites (Following https://quickstart.brigade.sh)
 Helm 3.7+ installed (Installation and Development)
 
