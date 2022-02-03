@@ -35,17 +35,10 @@ Common labels
 */}}
 {{- define "brigade-cron-event-source.labels" -}}
 helm.sh/chart: {{ include "brigade-cron-event-source.chart" . }}
-{{ include "brigade-cron-event-source.selectorLabels" . }}
+app.kubernetes.io/name: {{ include "brigade-cron-event-source.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/*
-Selector labels
-*/}}
-{{- define "brigade-cron-event-source.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "brigade-cron-event-source.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
