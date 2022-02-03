@@ -49,14 +49,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "brigade-cron-event-source.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "brigade-cron-event-source.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "brigade-cron-event-source.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
