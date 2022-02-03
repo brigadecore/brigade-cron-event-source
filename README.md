@@ -1,5 +1,10 @@
 # Brigade Cron Event Source
 
+![build](https://badgr.brigade2.io/v1/github/checks/brigadecore/brigade-cron-event-source/badge.svg?appID=99005)
+[![codecov](https://codecov.io/gh/brigadecore/brigade-github-gateway/branch/main/graph/badge.svg?token=ZPY3OF13FC)](https://codecov.io/gh/brigadecore/brigade-github-gateway)
+[![Go Report Card](https://goreportcard.com/badge/github.com/brigadecore/brigade-cron-event-source)](https://goreportcard.com/report/github.com/brigadecore/brigade-cron-event-source)
+[![slack](https://img.shields.io/badge/slack-brigade-brightgreen.svg?logo=slack)](https://kubernetes.slack.com/messages/C87MF1RFD)
+
 <img width="100" align="left" src="logo.png">
 
 This Brigade V2 Cron Event Source creates one Kubernetes cron job for each "cronEvents:" parameter list on the Event Source Helm installation chart values file. 
@@ -7,6 +12,24 @@ This Brigade V2 Cron Event Source creates one Kubernetes cron job for each "cron
 Each cron job will trigger a Brigade v2 event, based on cronjob schedule, Source, Type, Qualifiers, Labels and Payload provided on the values file.
 
 <br clear="left"/>
+
+## Why a Cron Event Source?
+
+Before getting started with this event source, do ask yourself if you truly need
+it. If your only interest is in executing a _simple_ task on a particular
+schedule, Kubernetes, by itself, gives you everything you need. In such a case,
+we don't recommend over-complicating things by involving Brigade!
+
+If, however, you wish to execute a more complex workflow on a particular
+schedule or if your use case is well-served by other Brigade features, _do_
+consider utilizing this event source.
+
+A non-exhaustive set of reasons you might wish to use this gateway includes:
+
+* Your workflow is complex and involves multiple containers that need to execute
+  concurrently or in serial.
+* You also have _other_ events you need to handle.
+* You care about capturing and saving logs from your automated task.
 
 ## Pre-requisites (Following https://quickstart.brigade.sh)
 Helm 3.7+ installed (Installation and Development)
@@ -107,3 +130,22 @@ Create .vscode/launch.json file
     ]
 }
 ```
+
+## Contributing
+
+The Brigade project accepts contributions via GitHub pull requests. The
+[Contributing](CONTRIBUTING.md) document outlines the process to help get your
+contribution accepted.
+
+## Support & Feedback
+
+We have a Slack channel! Visit [slack.brigade.sh](https://slack.brigade.sh) to
+join us. We welcome any support questions or feedback.
+
+To report an issue or to request a feature, open an issue
+[here](https://github.com/brigadecore/brigade-cron-event-source/issues).
+
+## Code of Conduct
+
+Participation in the Brigade project is governed by the
+[CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).
