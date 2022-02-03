@@ -35,10 +35,6 @@ spec:
               {{- toYaml $.Values.securityContext | nindent 14 }}
             image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
             imagePullPolicy: {{ default "IfNotPresent" $.Values.image.pullPolicy }}
-            {{- with $.Values.resources }}
-            resources: 
-              {{- toYaml . | nindent 14 }}
-            {{- end }}
             env:
             - name: API_ADDRESS
               value: {{ $.Values.brigade.apiAddress }}
