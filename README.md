@@ -112,3 +112,22 @@ Create .vscode/launch.json file
     ]
 }
 ```
+
+## Contributing
+
+The Brigade project accepts contributions via GitHub pull requests. The
+[Contributing](CONTRIBUTING.md) document outlines the process to help get your
+contribution accepted.
+
+## Support & Feedback
+
+We have a Slack channel! Visit [slack.brigade.sh](https://slack.brigade.sh) to
+join us. We welcome any support questions or feedback.
+
+To report an issue or to request a feature, open an issue
+[here](https://github.com/brigadecore/brigade-cron-event-source/issues).
+
+## Code of Conduct
+
+Participation in the Brigade project is governed by the
+[CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).
