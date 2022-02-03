@@ -33,9 +33,9 @@ Create chart name and version as used by the chart label.
 {{/*
 Common labels
 */}}
-{{- define "brigade-cron-gateway.labels" -}}
-helm.sh/chart: {{ include "brigade-cron-gateway.chart" . }}
-{{ include "brigade-cron-gateway.selectorLabels" . }}
+{{- define "brigade-cron-event-source.labels" -}}
+helm.sh/chart: {{ include "brigade-cron-event-source.chart" . }}
+{{ include "brigade-cron-event-source.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -45,18 +45,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "brigade-cron-gateway.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "brigade-cron-gateway.name" . }}
+{{- define "brigade-cron-event-source.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "brigade-cron-event-source.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Create the name of the service account to use
-*/}}
-{{- define "brigade-cron-gateway.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "brigade-cron-gateway.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
 {{- end }}

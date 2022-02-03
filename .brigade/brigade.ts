@@ -1,6 +1,6 @@
 import { events, Event, Job, ConcurrentGroup, SerialGroup, Container } from "@brigadecore/brigadier"
 
-const goImg = "brigadecore/go-tools:v0.5.0"
+const goImg = "brigadecore/go-tools:v0.6.0"
 const dindImg = "docker:20.10.9-dind"
 const dockerClientImg = "brigadecore/docker-tools:v0.1.0"
 const helmImg = "brigadecore/helm-tools:v0.4.0"
@@ -60,6 +60,10 @@ class MakeTargetJob extends Job {
 // builders, we can streamline all of this pretty significantly.
 class BuildImageJob extends MakeTargetJob {
   constructor(target: string, event: Event, env?: {[key: string]: string}) {
+    env ||= {}
+    env["DOCKER_ORG"] = event.project.secrets.dockerhubOrg
+    env["DOCKER_USERNAME"] = event.project.secrets.dockerhubUsername
+    env["DOCKER_PASSWORD"] = event.project.secrets.dockerhubPassword
     super([target], dockerClientImg, event, env)
     this.primaryContainer.environment.DOCKER_HOST = "localhost:2375"
     this.primaryContainer.command = [ "sh" ]
@@ -79,11 +83,7 @@ class BuildImageJob extends MakeTargetJob {
 // PushImageJob is a specialized job type for publishing Docker images.
 class PushImageJob extends BuildImageJob {
   constructor(target: string, event: Event, version?: string) {
-    const env = {
-      "DOCKER_ORG": event.project.secrets.dockerhubOrg,
-      "DOCKER_USERNAME": event.project.secrets.dockerhubUsername,
-      "DOCKER_PASSWORD": event.project.secrets.dockerhubPassword
-    }
+    const env = {}
     if (version) {
       env["VERSION"] = version
     }
@@ -91,8 +91,8 @@ class PushImageJob extends BuildImageJob {
   }
 }
 
-// A map of all jobs. When a check_run:rerequested event wants to re-run a
-// single job, this allows us to easily find that job by name.
+// A map of all jobs. When a ci:job_requested event wants to re-run a single
+// job, this allows us to easily find that job by name.
 const jobs: {[key: string]: (event: Event) => Job } = {}
 
 // Basic tests:
@@ -145,7 +145,7 @@ const publishChartJob = (event: Event, version: string) => {
 // Run the entire suite of tests WITHOUT publishing anything initially. If
 // EVERYTHING passes AND this was a push (merge, presumably) to the main branch,
 // then publish an "edge" image.
-async function runSuite(event: Event): Promise<void> {
+events.on("brigade.sh/github", "ci:pipeline_requested", async event => {
   await new SerialGroup(
     new ConcurrentGroup( // Basic tests
       testUnitJob(event),
@@ -158,27 +158,19 @@ async function runSuite(event: Event): Promise<void> {
     // Push "edge" image
     await pushJob(event).run()
   }
-}
-
-// Either of these events should initiate execution of the entire test suite.
-events.on("brigade.sh/github", "check_suite:requested", runSuite)
-events.on("brigade.sh/github", "check_suite:rerequested", runSuite)
+})
 
 // This event indicates a specific job is to be re-run.
-events.on("brigade.sh/github", "check_run:rerequested", async event => {
-  // Check run names are of the form <project name>:<job name>, so we strip
-  // event.project.id.length + 1 characters off the start of the check run name
-  // to find the job name.
-  const jobName = JSON.parse(event.payload).check_run.name.slice(event.project.id.length + 1)
-  const job = jobs[jobName]
+events.on("brigade.sh/github", "ci:job_requested", async event => {
+  const job = jobs[event.labels.job]
   if (job) {
     await job(event).run()
     return
   }
-  throw new Error(`No job found with name: ${jobName}`)
+  throw new Error(`No job found with name: ${event.labels.job}`)
 })
 
-events.on("brigade.sh/github", "release:published", async event => {
+events.on("brigade.sh/github", "cd:pipeline_requested", async event => {
   const version = JSON.parse(event.payload).release.tag_name
   await new SerialGroup(
     pushJob(event, version),
