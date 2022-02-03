@@ -1,6 +1,5 @@
 {{ $fullname := include "brigade-cron-event-source.fullname" . }}
 {{ $labels := include "brigade-cron-event-source.labels" . }}
-{{ $selectorLabels := include "brigade-cron-event-source.selectorLabels" . }}
 {{- range $.Values.cronEvents }}
 apiVersion: batch/v1
 kind: CronJob
@@ -25,7 +24,7 @@ spec:
           {{- end }}        
           labels:
             cronjob: {{ $fullname }}-{{ .nameSuffix }}
-            {{- $selectorLabels | nindent 12 }}
+            {{- $labels | nindent 12 }}
         spec:
           securityContext:
             {{- toYaml $.Values.podSecurityContext | nindent 12 }}
