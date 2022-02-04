@@ -41,10 +41,11 @@ brigadeApi:
   tokenSecretName: "brigade-api-server-token"
 
 image:
-  repository: "jorgearteiro/brigade-cron-eventsource"
-  pullPolicy:  "IfNotPresent" #"Always"
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.1.0"
+  repository: brigadecore/brigade-cron-event-source
+  ## tag should only be specified if you want to override Chart.appVersion
+  ## The default tag is the value of .Chart.AppVersion
+  # tag:
+  pullPolicy: IfNotPresent
 
 successfulJobsHistoryLimit: 10
 failedJobsHistoryLimit: 10
