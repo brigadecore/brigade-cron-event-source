@@ -1,24 +1,15 @@
 {{ $fullname := include "event-source.fullname" . }}
 {{ $labels := include "event-source.labels" . }}
-{{- range $.Values.cronEvents }}
+{{- range $.Values.events }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: {{ $fullname }}-{{ .nameSuffix }}
+  name: {{ $fullname }}-{{ .name }}
   labels:
     {{- $labels | nindent 4 }}
+    cronjob: {{ .name }}
 data:
-  {{- with .qualifiers }}
-  qualifiers: |
-    {{- toYaml . | nindent 4 }}    
-  {{- end }}
-  {{- with .labels }}
-  labels: |
-    {{- toYaml . | nindent 4 }}    
-  {{- end }}
-  {{- with .payload }}
-  payload: |
-    {{- toYaml . | nindent 4 }}    
-  {{- end }}
+  event.yaml: |
+    {{- toYaml .brigadeEvent | nindent 4 }}
 ---  
-{{- end}}  
+{{- end}}
