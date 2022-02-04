@@ -40,19 +40,19 @@ spec:
               {{- toYaml . | nindent 14 }}
             {{- end }}  
             env:
+            - name: API_ADDRESS
+              value: {{ $.Values.brigade.apiAddress }}
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullname }}
+                  key: brigadeAPIToken
+            - name: API_IGNORE_CERT_WARNINGS
+              value: {{ quote $.Values.brigade.apiIgnoreCertWarnings }}
             - name: BRIGADE_SOURCE
               value: "{{ .source }}"
             - name: BRIGADE_TYPE
               value: "{{ .type }}"
-            - name: API_ADDRESS
-              value: "{{ $.Values.brigadeApi.address }}"
-            - name: API_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  key: apitoken
-                  name: {{ $.Values.brigadeApi.tokenSecretName }}     
-            - name: API_IGNORE_CERT_WARNINGS
-              value: "{{ $.Values.brigadeApi.ignoreCertWarnings }}"  
             volumeMounts:
             - name: cronjob-config
               mountPath: "/cronjob-config"

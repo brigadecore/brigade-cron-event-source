@@ -32,13 +32,14 @@ cronEvents:
     labels: {}
     payload: {}    
 
-#
-# brigade-cron-event-sources values
-#
-brigadeApi:
-  address: "https://brigade-apiserver.brigade.svc.cluster.local"
-  ignoreCertWarnings: "true"
-  tokenSecretName: "brigade-api-server-token"
+brigade:
+  ## Address of your Brigade 2 API server, including leading protocol (http://
+  ## or https://)
+  apiAddress: https://brigade-apiserver.brigade.svc.cluster.local
+  ## API token belonging to a Brigade 2 service account
+  apiToken:
+  ## Whether to ignore cert warning from the API server
+  apiIgnoreCertWarnings: true
 
 image:
   repository: brigadecore/brigade-cron-event-source
