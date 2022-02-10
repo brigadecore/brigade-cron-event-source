@@ -4,8 +4,8 @@ import (
 	"io/ioutil"
 
 	"github.com/brigadecore/brigade-foundations/os"
-	"github.com/brigadecore/brigade/sdk/v2/core"
-	"github.com/brigadecore/brigade/sdk/v2/restmachinery"
+	"github.com/brigadecore/brigade/sdk/v3"
+	"github.com/brigadecore/brigade/sdk/v3/restmachinery"
 	"github.com/ghodss/yaml"
 )
 
@@ -26,8 +26,8 @@ func apiClientConfig() (string, string, restmachinery.APIClientOptions, error) {
 	return address, token, opts, err
 }
 
-func event() (core.Event, error) {
-	event := core.Event{}
+func event() (sdk.Event, error) {
+	event := sdk.Event{}
 	eventBytes, err := ioutil.ReadFile("/app/config/event.yaml")
 	if err != nil {
 		return event, err

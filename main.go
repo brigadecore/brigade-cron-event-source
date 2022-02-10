@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/brigadecore/brigade/sdk/v2/core"
+	"github.com/brigadecore/brigade/sdk/v3"
 )
 
 func main() {
@@ -13,15 +13,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	client := core.NewEventsClient(address, token, &opts)
+	client := sdk.NewEventsClient(address, token, &opts)
 
 	event, err := event()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	var eventList core.EventList
-	if eventList, err = client.Create(context.Background(), event); err != nil {
+	var eventList sdk.EventList
+	if eventList, err =
+		client.Create(context.Background(), event, nil); err != nil {
 		log.Fatalf("error creating event: %s", err)
 	}
 
