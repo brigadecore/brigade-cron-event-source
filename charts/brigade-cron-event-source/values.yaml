@@ -2,35 +2,58 @@
 ## This is a YAML-formatted file.
 ## Declare variables to be passed into your templates.
 
-#
-# cron event sources to be created
-#
-# https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#schedule
-# schedule: "*/5 * * * *" # Every 5 minutes
-# schedule: "*/1 * * * *" # Every 1 minutes
-# schedule: "@hourly"
-# schedule: "@daily"
-# schedule: "@weekly"
-# schedule: "@monthly"
-# schedule: "@yearly"
-cronEvents:
-  - nameSuffix: "job01" #maximum 5 chars
-    source: "cronsource"
-    type: "cron"
-    schedule: "*/1 * * * *"
-    qualifiers: 
-      customer: "cron event"
-    labels: 
-      costCenter: "finance"
-    payload: 
-      data: "test cron event source"
-  - nameSuffix: "job02" #maximum 5 chars
-    source: "cronsource"
-    type: "cron"
-    schedule: "*/5 * * * *"
-    qualifiers: {}
-    labels: {}
-    payload: {}    
+## Events to be emitted, each on the indicated schedule
+events: []
+# ## Example:
+# ## 
+# ## Note that this example works with the hello-world example project found at
+# ## https://github.com/brigadecore/brigade/blob/main/examples/01-hello-world/project.yaml
+# ##
+# ## This example emits events that the hello-world example project already
+# ## subscribes to -- namely events that are ordinarily created using the Brigade
+# ## CLI. This demonstrates the flexibility of this event source. It can create
+# ## any type of event you like, as long as it is granted permissions to do so.
+# ##
+# ## For reference, these are the commands for creating a service account for
+# ## this event source, with proper permissions for this example:
+# ##
+# ##   $ brig service-account create \
+# ##       --id brigade-cron-event-source \
+# ##       --description brigade-cron-event-source
+# ##
+# ##   $ brig project role grant PROJECT_USER \
+# ##       --project hello-world \
+# ##       --service-account brigade-cron-event-source
+# - name: hello-world
+#   ## https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#schedule
+#   ##
+#   ## Examples:
+#   ##
+#   ##   schedule: "*/5 * * * *" # Every 5 minutes
+#   ##   schedule: "*/1 * * * *" # Every 1 minutes
+#   ##   schedule: "@hourly"
+#   ##   schedule: "@daily"
+#   ##   schedule: "@weekly"
+#   ##   schedule: "@monthly"
+#   ##   schedule: "@yearly"
+#   schedule: "*/10 * * * *"
+#   successfulJobsHistoryLimit: 10
+#   failedJobsHistoryLimit: 10
+#   ## For Brigade event schema, see
+#   ## https://schemas.brigade.sh/schemas-v2/event.json
+#   brigadeEvent:
+#     apiVersion: brigade.sh/v2
+#     kind: Event
+#     ## Prevent "over-subscriptions" by targeting a specific Brigade project
+#     projectID: hello-world
+#     ## Use any event source you like as long as your Brigade service account
+#     ## has corresponding permissions 
+#     source: brigade.sh/cli
+#     ## Use any type you like
+#     type: exec
+#     qualifiers: {}
+#     labels: {}
+#     payload: ""
 
 brigade:
   ## Address of your Brigade 2 API server, including leading protocol (http://

@@ -1,48 +1,33 @@
 package main
 
 import (
+	"context"
 	"log"
 
-	"github.com/brigadecore/brigade-foundations/signals"
-	"github.com/brigadecore/brigade/sdk/v2/core"
+	"github.com/brigadecore/brigade/sdk/v3"
 )
 
 func main() {
-
-	ctx := signals.Context()
-
 	address, token, opts, err := apiClientConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	client := core.NewEventsClient(address, token, &opts)
+	client := sdk.NewEventsClient(address, token, &opts)
 
-	brigadeSource, brigadeType, _ := eventConfig()
+	event, err := event()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	qualifiers, _ := qualifiersConfig()
-
-	labels, _ := labelsConfig()
-
-	payload, _ := payloadConfig()
-
-	brigadeEvent := core.Event{
-		Source:     brigadeSource,
-		Type:       brigadeType,
-		Qualifiers: qualifiers,
-		Labels:     labels,
-		Payload:    payload,
+	var eventList sdk.EventList
+	if eventList, err =
+		client.Create(context.Background(), event, nil); err != nil {
+		log.Fatalf("error creating event: %s", err)
 	}
 
-	eventList, err := client.Create(ctx, brigadeEvent)
-
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println(eventList)
+	log.Println("Created events: ")
+	for _, event = range eventList.Items {
+		log.Println(event.ID)
 	}
-
 }
