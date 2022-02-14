@@ -20,6 +20,10 @@ func main() {
 		log.Fatal(err)
 	}
 
+	if err = validateEvent(event); err != nil {
+		log.Fatal(err)
+	}
+
 	var eventList sdk.EventList
 	if eventList, err =
 		client.Create(context.Background(), event, nil); err != nil {
