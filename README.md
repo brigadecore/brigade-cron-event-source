@@ -1,7 +1,7 @@
 # Brigade Cron Event Source
 
 ![build](https://badgr.brigade2.io/v1/github/checks/brigadecore/brigade-cron-event-source/badge.svg?appID=99005)
-[![codecov](https://codecov.io/gh/brigadecore/brigade-github-gateway/branch/main/graph/badge.svg?token=ZPY3OF13FC)](https://codecov.io/gh/brigadecore/brigade-github-gateway)
+[![codecov](https://codecov.io/gh/brigadecore/brigade-cron-event-source/branch/main/graph/badge.svg?token=ZSac3nWz6M)](https://codecov.io/gh/brigadecore/brigade-cron-event-source)
 [![Go Report Card](https://goreportcard.com/badge/github.com/brigadecore/brigade-cron-event-source)](https://goreportcard.com/report/github.com/brigadecore/brigade-cron-event-source)
 [![slack](https://img.shields.io/badge/slack-brigade-brightgreen.svg?logo=slack)](https://kubernetes.slack.com/messages/C87MF1RFD)
 
