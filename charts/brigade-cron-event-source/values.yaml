@@ -44,11 +44,10 @@ events: []
 #   brigadeEvent:
 #     apiVersion: brigade.sh/v2
 #     kind: Event
-#     ## Prevent "over-subscriptions" by targeting a specific Brigade project
+#     ## A specific Brigade project MUST be specified
 #     projectID: hello-world
-#     ## Use any event source you like as long as your Brigade service account
-#     ## has corresponding permissions 
-#     source: brigade.sh/cli
+#     ## brigade.sh/cron is the only permissible source value at this time
+#     source: brigade.sh/cron
 #     ## Use any type you like
 #     type: exec
 #     qualifiers: {}
