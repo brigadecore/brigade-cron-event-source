@@ -45,6 +45,8 @@ spec:
                   key: brigadeAPIToken
             - name: API_IGNORE_CERT_WARNINGS
               value: {{ quote $.Values.brigade.apiIgnoreCertWarnings }}
+            - name: EVENT_PATH
+              value: "/app/config/event.json"
             volumeMounts:
             - name: config
               mountPath: "/app/config"
