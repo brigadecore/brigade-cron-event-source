@@ -9,7 +9,7 @@ metadata:
     {{- $labels | nindent 4 }}
     cronjob: {{ .name }}
 data:
-  event.yaml: |
-    {{- toYaml .brigadeEvent | nindent 4 }}
+  event.json: |
+    {{- mustToJson .brigadeEvent }}
 ---  
 {{- end}}

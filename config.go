@@ -1,12 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"io/ioutil"
 
+	"github.com/brigadecore/brigade-foundations/file"
 	"github.com/brigadecore/brigade-foundations/os"
 	"github.com/brigadecore/brigade/sdk/v3"
 	"github.com/brigadecore/brigade/sdk/v3/restmachinery"
-	"github.com/ghodss/yaml"
+	"github.com/pkg/errors"
 )
 
 // apiClientConfig populates the Brigade SDK's APIClientOptions from
@@ -28,10 +30,21 @@ func apiClientConfig() (string, string, restmachinery.APIClientOptions, error) {
 
 func event() (sdk.Event, error) {
 	event := sdk.Event{}
-	eventBytes, err := ioutil.ReadFile("/app/config/event.yaml")
+	eventPath, err := os.GetRequiredEnvVar("EVENT_PATH")
 	if err != nil {
 		return event, err
 	}
-	err = yaml.Unmarshal(eventBytes, &event)
+	var exists bool
+	if exists, err = file.Exists(eventPath); err != nil {
+		return event, err
+	}
+	if !exists {
+		return event, errors.Errorf("file %s does not exist", eventPath)
+	}
+	eventBytes, err := ioutil.ReadFile(eventPath)
+	if err != nil {
+		return event, err
+	}
+	err = json.Unmarshal(eventBytes, &event)
 	return event, err
 }
