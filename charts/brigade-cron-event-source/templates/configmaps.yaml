@@ -10,6 +10,6 @@ metadata:
     cronjob: {{ .name }}
 data:
   event.json: |
-    {{- mustToJson .brigadeEvent }}
+    {{ mustToJson .brigadeEvent }}
 ---  
 {{- end}}
