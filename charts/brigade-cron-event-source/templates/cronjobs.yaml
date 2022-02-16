@@ -26,13 +26,9 @@ spec:
             cronjob: {{ .name }}
             {{- $labels | nindent 12 }}
         spec:
-          securityContext:
-            {{- toYaml $.Values.podSecurityContext | nindent 12 }}
           restartPolicy: OnFailure
           containers:
           - name: brigade-cron-event-source
-            securityContext:
-              {{- toYaml $.Values.securityContext | nindent 14 }}
             image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
             imagePullPolicy: {{ default "IfNotPresent" $.Values.image.pullPolicy }}
             env:
