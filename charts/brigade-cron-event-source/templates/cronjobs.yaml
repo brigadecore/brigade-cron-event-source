@@ -10,8 +10,8 @@ metadata:
     {{- $labels | nindent 4 }}
 spec:
   schedule: {{ quote .schedule }}
-  successfulJobsHistoryLimit: {{ default 10 $.Values.successfulJobsHistoryLimit }}
-  failedJobsHistoryLimit: {{ default 10 $.Values.failedJobsHistoryLimit }}
+  successfulJobsHistoryLimit: {{ default 10 .successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 10 .failedJobsHistoryLimit }}
   concurrencyPolicy: "Forbid"
   jobTemplate:
     spec:

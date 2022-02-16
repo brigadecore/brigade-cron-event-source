@@ -70,9 +70,6 @@ image:
   # tag:
   pullPolicy: IfNotPresent
 
-successfulJobsHistoryLimit: 10
-failedJobsHistoryLimit: 10
-
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
