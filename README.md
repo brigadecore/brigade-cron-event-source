@@ -92,7 +92,7 @@ a file you can modify:
 
 ```console
 $ helm inspect values oci://ghcr.io/brigadecore/brigade-cron-event-source \
-    --version v0.1.0 > ~/brigade-cron-event-source-values.yaml
+    --version v0.1.1 > ~/brigade-cron-event-source-values.yaml
 ```
 
 Edit `~/brigade-cron-event-source-values.yaml`, making the following changes:
@@ -129,7 +129,7 @@ following command to install the event source using the above customizations:
 ```console
 $ helm install brigade-cron-event-source \
     oci://ghcr.io/brigadecore/brigade-cron-event-source \
-    --version v0.1.0 \
+    --version v0.1.1 \
     --create-namespace \
     --namespace brigade-cron-event-source \
     --values ~/brigade-cron-event-source-values.yaml \
