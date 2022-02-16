@@ -40,7 +40,7 @@ events: []
 # ##   $ brig project role grant PROJECT_USER \
 # ##       --project hello-world \
 # ##       --service-account brigade-cron-event-source
-# - name: hello-world
+# - name: hello-world-nightly-cleanup
 #   ## https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#schedule
 #   ##
 #   ## Examples:
@@ -65,7 +65,7 @@ events: []
 #     ## brigade.sh/cron is the only permissible source value at this time
 #     source: brigade.sh/cron
 #     ## Use any type you like
-#     type: exec
+#     type: nightly-cleanup
 #     qualifiers: {}
 #     labels: {}
 #     payload: ""
