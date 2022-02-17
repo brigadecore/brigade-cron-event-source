@@ -7,9 +7,10 @@
 
 <img width="100" align="left" src="logo.png">
 
-This Brigade V2 Cron Event Source creates one Kubernetes cron job for each "cronEvents:" parameter list on the Event Source Helm installation chart values file. 
-
-Each cron job will trigger a Brigade v2 event, based on cronjob schedule, Source, Type, Qualifiers, Labels and Payload provided on the values file.
+The Brigade Cron Event Source offers an easy, low-overhead method of emitting
+user-defined events into Brigade's event bus on a user-defined schedule. It will
+create a Kubernetes `CronJob` resource for each such event. A small program will
+wake on the specified schedule to emit its event. _That's it._
 
 <br clear="left"/>
 
