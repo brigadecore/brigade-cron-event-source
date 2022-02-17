@@ -10,8 +10,8 @@ metadata:
     {{- $labels | nindent 4 }}
 spec:
   schedule: {{ quote .schedule }}
-  successfulJobsHistoryLimit: {{ default 10 $.Values.successfulJobsHistoryLimit }}
-  failedJobsHistoryLimit: {{ default 10 $.Values.failedJobsHistoryLimit }}
+  successfulJobsHistoryLimit: {{ default 10 .successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ default 10 .failedJobsHistoryLimit }}
   concurrencyPolicy: "Forbid"
   jobTemplate:
     spec:
@@ -26,13 +26,9 @@ spec:
             cronjob: {{ .name }}
             {{- $labels | nindent 12 }}
         spec:
-          securityContext:
-            {{- toYaml $.Values.podSecurityContext | nindent 12 }}
           restartPolicy: OnFailure
           containers:
           - name: brigade-cron-event-source
-            securityContext:
-              {{- toYaml $.Values.securityContext | nindent 14 }}
             image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag | default $.Chart.AppVersion }}"
             imagePullPolicy: {{ default "IfNotPresent" $.Values.image.pullPolicy }}
             env:

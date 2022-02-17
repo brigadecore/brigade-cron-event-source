@@ -2,6 +2,22 @@
 ## This is a YAML-formatted file.
 ## Declare variables to be passed into your templates.
 
+image:
+  repository: brigadecore/brigade-cron-event-source
+  ## tag should only be specified if you want to override Chart.appVersion
+  ## The default tag is the value of .Chart.AppVersion
+  # tag:
+  pullPolicy: IfNotPresent
+
+brigade:
+  ## Address of your Brigade 2 API server, including leading protocol (http://
+  ## or https://)
+  apiAddress: https://brigade-apiserver.brigade.svc.cluster.local
+  ## API token belonging to a Brigade 2 service account
+  apiToken:
+  ## Whether to ignore cert warning from the API server
+  apiIgnoreCertWarnings: true
+
 ## Events to be emitted, each on the indicated schedule
 events: []
 # ## Example:
@@ -24,7 +40,7 @@ events: []
 # ##   $ brig project role grant PROJECT_USER \
 # ##       --project hello-world \
 # ##       --service-account brigade-cron-event-source
-# - name: hello-world
+# - name: hello-world-nightly-cleanup
 #   ## https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#schedule
 #   ##
 #   ## Examples:
@@ -49,46 +65,16 @@ events: []
 #     ## brigade.sh/cron is the only permissible source value at this time
 #     source: brigade.sh/cron
 #     ## Use any type you like
-#     type: exec
+#     type: nightly-cleanup
 #     qualifiers: {}
 #     labels: {}
 #     payload: ""
-
-brigade:
-  ## Address of your Brigade 2 API server, including leading protocol (http://
-  ## or https://)
-  apiAddress: https://brigade-apiserver.brigade.svc.cluster.local
-  ## API token belonging to a Brigade 2 service account
-  apiToken:
-  ## Whether to ignore cert warning from the API server
-  apiIgnoreCertWarnings: true
-
-image:
-  repository: brigadecore/brigade-cron-event-source
-  ## tag should only be specified if you want to override Chart.appVersion
-  ## The default tag is the value of .Chart.AppVersion
-  # tag:
-  pullPolicy: IfNotPresent
-
-successfulJobsHistoryLimit: 10
-failedJobsHistoryLimit: 10
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
 podAnnotations: {}
-
-podSecurityContext: 
-  fsGroup: 2000
-
-securityContext:
-  capabilities:
-    drop:
-    - ALL
-  readOnlyRootFilesystem: true
-  runAsNonRoot: true
-  runAsUser: 1000
 
 nodeSelector: {}
 
