@@ -25,7 +25,8 @@ If, however, you wish to execute a more complex workflow on a particular
 schedule or if your use case is well-served by other Brigade features, _do_
 consider utilizing this event source.
 
-A non-exhaustive set of reasons you might wish to use this gateway includes:
+A non-exhaustive set of reasons you might wish to use this event source
+includes:
 
 * Your workflow is complex and involves multiple containers that need to execute
   concurrently or in serial.
@@ -43,7 +44,7 @@ Prerequisites:
 * `kubectl`, `helm` (commands below require Helm 3.7.0+), and `brig` (the
   Brigade 2 CLI)
 
-### 1. Create a Service Account for the Gateway
+### 1. Create a Service Account for the Event Source
 
 > ⚠️&nbsp;&nbsp;To proceed beyond this point, you'll need to be logged into Brigade 2
 as the "root" user (not recommended) or (preferably) as a user with the `ADMIN`
