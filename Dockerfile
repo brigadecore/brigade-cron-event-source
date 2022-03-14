@@ -16,6 +16,6 @@ RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
   -ldflags "-w -X github.com/brigadecore/brigade-foundations/version.version=$VERSION -X github.com/brigadecore/brigade-foundations/version.commit=$COMMIT" \
   .
 
-FROM scratch
+FROM gcr.io/distroless/static:nonroot as final
 COPY --from=builder /src/bin/ /brigade-cron-event-source/bin/
 ENTRYPOINT ["/brigade-cron-event-source/bin/cron-event-source"]
