@@ -17,4 +17,5 @@ RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build \
   .
 
 FROM gcr.io/distroless/static:nonroot as final
+COPY --from=builder /src/bin/ /brigade-cron-event-source/bin/
 ENTRYPOINT ["/brigade-cron-event-source/bin/cron-event-source"]
