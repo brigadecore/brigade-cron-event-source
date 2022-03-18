@@ -6,14 +6,22 @@ const dockerClientImg = "brigadecore/docker-tools:v0.1.0"
 const helmImg = "brigadecore/helm-tools:v0.4.0"
 const localPath = "/workspaces/brigade-cron-event-source"
 
-// MakeTargetJob is just a job wrapper around one or more make targets.
-class MakeTargetJob extends Job {
-  constructor(targets: string[], img: string, event: Event, env?: {[key: string]: string}) {
-    super(targets[0], img, event)
+// JobWithSource is a base class for any Job that uses project source code.
+class JobWithSource extends Job {
+  constructor(name: string, img: string, event: Event, env?: {[key: string]: string}) {
+    super(name, img, event)
     this.primaryContainer.sourceMountPath = localPath
     this.primaryContainer.workingDirectory = localPath
-    this.primaryContainer.environment = env || {}
-    this.primaryContainer.environment["SKIP_DOCKER"] = "true"
+    this.primaryContainer.environment = env || {}    
+  }
+}
+
+// MakeTargetJob is just a job wrapper around one or more make targets.
+class MakeTargetJob extends JobWithSource {
+  constructor(name: string, targets: string[], img: string, event: Event, env?: {[key: string]: string}) {
+    env ||= {}
+    env["SKIP_DOCKER"] = "true"
+    super(name, img, event, env)
     this.primaryContainer.command = [ "make" ]
     this.primaryContainer.arguments = targets
   }
@@ -27,7 +35,7 @@ const jobs: {[key: string]: (event: Event) => Job } = {}
 
 const testUnitJobName = "test-unit"
 const testUnitJob = (event: Event) => {
-  return new MakeTargetJob([testUnitJobName, "upload-code-coverage"], goImg, event, {
+  return new MakeTargetJob(testUnitJobName, ["test-unit", "upload-code-coverage"], goImg, event, {
     "CODECOV_TOKEN": event.project.secrets.codecovToken
   })
 }
@@ -35,13 +43,13 @@ jobs[testUnitJobName] = testUnitJob
 
 const lintJobName = "lint"
 const lintJob = (event: Event) => {
-  return new MakeTargetJob([lintJobName], goImg, event)
+  return new MakeTargetJob(lintJobName, ["lint"], goImg, event)
 }
 jobs[lintJobName] = lintJob
 
 const lintChartJobName = "lint-chart"
 const lintChartJob = (event: Event) => {
-  return new MakeTargetJob([lintChartJobName], helmImg, event)
+  return new MakeTargetJob(lintChartJobName, ["lint-chart"], helmImg, event)
 }
 jobs[lintChartJobName] = lintChartJob
 
@@ -129,7 +137,7 @@ const buildJob = (event: Event, version?: string) => {
     env["IMAGE_REGISTRY_PASSWORD"] = registryPassword
     registriesLoginCmd = `${registriesLoginCmd} && docker login ${registry} -u ${registryUsername} -p $IMAGE_REGISTRY_PASSWORD`
   }
-  const job = new MakeTargetJob(["push"], dockerClientImg, event, env)
+  const job = new JobWithSource("build", dockerClientImg, event, env)
   job.primaryContainer.command = [ "sh" ]
   job.primaryContainer.arguments = [
     "-c",
@@ -150,7 +158,7 @@ jobs[buildJobName] = buildJob
 
 const publishChartJobName = "publish-chart"
 const publishChartJob = (event: Event, version: string) => {
-  return new MakeTargetJob([publishChartJobName], helmImg, event, {
+  return new MakeTargetJob(publishChartJobName, ["publish-chart"], helmImg, event, {
     "VERSION": version,
     "HELM_REGISTRY": event.project.secrets.helmRegistry || "ghcr.io",
     "HELM_ORG": event.project.secrets.helmOrg,
