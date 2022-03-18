@@ -1,6 +1,6 @@
 {
   "name": "brigade-cron-event-source-ci-cd",
   "dependencies": {
-    "@brigadecore/brigadier": "^2.2.0"
+    "@brigadecore/brigadier": "^2.3.1"
   }
 }
