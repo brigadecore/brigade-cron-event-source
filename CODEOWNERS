@@ -1,4 +1,4 @@
 # This file is described here:  https://help.github.com/en/articles/about-code-owners
 
-# Global Owners: These are brigadecore org maintainers + maintainers of this repo
-* @brigadecore/maintainers @brigadecore/cron-event-source-maintainers
+# Global Owners: These are brigadecore org maintainers + specific outside collaborators
+* @brigadecore/maintainers @jorgearteiro
