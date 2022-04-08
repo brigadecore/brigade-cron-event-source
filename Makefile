@@ -173,7 +173,7 @@ publish-chart:
 	'
 
 ################################################################################
-# Targets to facilitate hacking on Brigade Cron Event Source.                  #
+# Targets to facilitate hacking on this event source                           #
 ################################################################################
 
 .PHONY: hack-kind-up
