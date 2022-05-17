@@ -54,7 +54,7 @@ Please refer to Brigade's own documentation.
 Using Brigade 2's `brig` CLI, create a service account for the event source to
 use:
 
-```console
+```shell
 $ brig service-account create \
     --id brigade-cron-event-source \
     --description brigade-cron-event-source
@@ -65,7 +65,7 @@ _It is your only opportunity to access this value, as Brigade does not save it._
 
 Authorize this service account to create new events:
 
-```console
+```shell
 $ brig role grant EVENT_CREATOR \
     --service-account brigade-cron-event-source \
     --source brigade.sh/cron
@@ -78,13 +78,13 @@ event source from using this token for impersonating other sources._
 
 ### 2. Install the Cron Event Source
 
-> ⚠️&nbsp;&nbsp;be sure you are using
+> ⚠️&nbsp;&nbsp;Be sure you are using
 > [Helm 3.7.0](https://github.com/helm/helm/releases/tag/v3.7.0) or greater and
 > enable experimental OCI support:
 >
-> ```console
->  $ export HELM_EXPERIMENTAL_OCI=1
->  ```
+> ```shell
+> $ export HELM_EXPERIMENTAL_OCI=1
+> ```
 
 As this chart requires custom configuration to function properly, we'll need to
 create a chart values file with said config.
@@ -92,7 +92,7 @@ create a chart values file with said config.
 Use the following command to extract the full set of configuration options into
 a file you can modify:
 
-```console
+```shell
 $ helm inspect values oci://ghcr.io/brigadecore/brigade-cron-event-source \
     --version v1.1.1 > ~/brigade-cron-event-source-values.yaml
 ```
@@ -128,7 +128,7 @@ Edit `~/brigade-cron-event-source-values.yaml`, making the following changes:
 Save your changes to `~/brigade-cron-event-source-values.yaml` and use the
 following command to install the event source using the above customizations:
 
-```console
+```shell
 $ helm install brigade-cron-event-source \
     oci://ghcr.io/brigadecore/brigade-cron-event-source \
     --version v1.1.1 \
@@ -175,7 +175,7 @@ spec:
 Assuming this file were named `project.yaml`, you can create the project like
 so:
 
-```console
+```shell
 $ brig project create --file project.yaml
 ```
 
